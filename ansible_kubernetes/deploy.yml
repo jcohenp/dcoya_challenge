@@ -1,0 +1,23 @@
+- name: Install Kubernetes
+  hosts: kubernetes-nodes
+  tasks:
+  - name: Install kubeadm, kubelet, and kubectl
+    become: true
+    apt:
+      name: ['kubelet','kubeadm','kubectl']
+      state: present
+
+  - name: Initialize Kubernetes cluster
+    become: true
+    command: kubeadm init --pod-network-cidr=10.244.0.0/16
+
+  - name: Copy kubeconfig to user's home directory
+    become: true
+    copy:
+      src: /etc/kubernetes/admin.conf
+      dest: /home/user/.kube/config
+      remote_src: yes
+
+  - name: Install Calico CNI
+    become: true
+    command: kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml

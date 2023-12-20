@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Date and Machine Name</title>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var date = new Date().toLocaleString();
+      var machineName = process.env.MACHINE_NAME;
+      document.getElementById("datetime").innerHTML = "Current Local Date and Time: " + date;
+      document.getElementById("machinename").innerHTML = "Name of the Current Machine: " + machineName;
+    });
+  </script>
+</head>
+<body>
+  <h1>Date and Machine Name</h1>
+  <p id="datetime"></p>
+  <p id="machinename"></p>
+</body>
+</html>

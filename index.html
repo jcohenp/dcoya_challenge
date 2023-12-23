@@ -3,13 +3,25 @@
 <head>
   <title>Date and Machine Name</title>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      var date = new Date().toLocaleString();
-      var machineName = process.env.MACHINE_NAME;
-      document.getElementById("datetime").innerHTML = "Current Local Date and Time: " + date;
-      document.getElementById("machinename").innerHTML = "Name of the Current Machine: " + machineName;
-    });
-  </script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Fetch machine name
+            fetch('machine-name.txt')
+                .then(response => response.text())
+                .then(machineName => {
+                    // Display machine name
+                    document.getElementById("machinename").innerHTML = `Current Machine Name: ${machineName.trim()}`;
+
+                    // Get current date and time
+                    var date = new Date().toLocaleString();
+
+                    // Display current date and time
+                    document.getElementById("datetime").innerHTML = `Current Local Date and Time: ${date}`;
+                })
+                .catch(error => {
+                    console.error('Error fetching machine name:', error);
+                });
+        });
+    </script>
 </head>
 <body>
   <h1>Date and Machine Name</h1>

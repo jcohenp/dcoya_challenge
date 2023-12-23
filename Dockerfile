@@ -10,7 +10,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 # Generate SSL certificate (self-signed)
 RUN openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
-    -subj "/C=IL/L=Tel aviv/O=JulOrganization/CN=localhost" \
+    -subj "/C=IL/L=Tel aviv/O=JulOrganization/CN=dcoya" \
     -keyout /etc/ssl/private/nginx-selfsigned.key \
     -out /etc/ssl/certs/nginx-selfsigned.crt
 
@@ -25,11 +25,8 @@ RUN chmod 600 /etc/ssl/private/nginx-selfsigned.key \
     && chown -R nginx:nginx /run/nginx \
     && chown -R nginx:nginx /usr/share/nginx
 
-# Set environment variable for machine name
-ENV MACHINE_NAME=$(hostname)
-
-# Copy environment file with machine name
-COPY environment /etc/profile.d/
+# Create environment file (machine-name.txt) for my nginx configuration
+COPY machine-name.txt /usr/share/nginx/html/machine-name.txt
 
 # Switch to non-root user (nginx)
 USER nginx

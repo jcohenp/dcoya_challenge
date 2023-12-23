@@ -1,4 +1,4 @@
-# dcoya_challenge Repository
+# dcoya_assignment 
 
 This repository contains various resources and configurations for managing a Kubernetes environment using Ansible, SSL certificates, Kubernetes configurations, testing scripts, and more.
 
@@ -13,6 +13,7 @@ This repository contains various resources and configurations for managing a Kub
 
 
 ## Folder Structure:
+
 - **Dockerfile**: used to build the image before to push to the docker registry.
 - **index.html**: used by the dockerfile to set up the nginx page.
 - **machine-name.txt**: used as environment file to let index.html file to display the machine name.
@@ -72,7 +73,7 @@ This repository contains various resources and configurations for managing a Kub
 2. **Update the `inventory` file with the IP address of your AWS EC2 instance:**
 
     ```ini
-    [kubernetes]
+    [kubernetes-nodes]
     <your_instance_ip> ansible_user=ubuntu ansible_ssh_private_key_file=<path_to_ssh_key>
     ```
 
@@ -256,5 +257,42 @@ This repository contains various resources and configurations for managing a Kub
     pytest_dcoya.py::test_date_format PASSED                                                                                                                [ 75%]
     pytest_dcoya.py::test_ssl_certificate PASSED         
     ```
-
+    
+    ## POC 
+    a POC environment is available if you want to have a look on my own configuration and to run tests.
+    SSH access to the EC2 machine:
+    
+        ssh -i "dcoya.pem" ubuntu@ec2-100-26-40-113.compute-1.amazonaws.com
+    
+    ## Project Enhancement Plan
+    
+    ### Domain and Certificate
+    - **Domain Creation**: Register a domain name to uniquely identify the project.
+    - **Certificate Authority (CA)**: Obtain an SSL/TLS certificate from a trusted Certificate Authority instead of using self-signed certificates.
+    
+    ### Infrastructure Setup
+    - **Service Type Load Balancer**: Implement a service type load balancer to distribute incoming traffic efficiently.
+    - **Cloud Provider Integration**: Utilize the cloud provider's capabilities to manage traffic redirection to Nginx.
+    
+    ### Continuous Deployment
+    - **Jenkins Pipeline**: Establish a continuous deployment pipeline in Jenkins to automate the deployment of new nodes.
+    
+    ### Kubernetes Cluster Setup
+    - **Master and Worker Nodes**: Create a Kubernetes cluster architecture with dedicated master nodes for administrative tasks and worker nodes for application-related activities.
+    - **Security Analysis**: Implement security measures for the Kubernetes cluster, including pods, to ensure robust protection against vulnerabilities and unauthorized access.
+    
+    ### Monitoring and Analysis
+    - **Prometheus Integration**: Integrate Prometheus to monitor and check the status of the Kubernetes cluster, ensuring proactive identification of issues and performance analysis.
+    
+    ### Security Measures
+    - **Web Application Firewall (WAF)**: Implement a WAF to control and manage incoming traffic, allowing filtering based on predefined rules to block potentially malicious IP addresses.
+    
+    ### Secrets Management
+    - If any sensitive data is used (e.g., SSL certificates, API keys), demonstrate how to manage these securely within the deployment process.
+    
+    ### Automated Testing:
+    - Introduce automated testing into the CI/CD pipeline to verify the functionality and performance of the deployed application automatically.
+    
+    ### Scalability and High Availability:
+    - Address how the Kubernetes deployment can be scaled horizontally or made highly available, especially if this application is part of a production environment.
 

@@ -84,8 +84,13 @@
     become: yes
     command: "./chrome.sh"
 
-  - name: Move and change ownership of the folder
-    command: mv /home/ubuntu/dcoya_challenge/ansible_kubernetes /home/kubernetes && chown -R kubernetes: /home/kubernetes
+  - name: Copy folder for the kubernetes user
+    become_user: root
+    command: "cp -R /home/ubuntu/dcoya_challenge/ /home/kubernetes"
+  
+  - name: change ownership to the kubernetes user
+    become_user: root
+    command: "chown -R kubernetes: /home/kubernetes/dcoya_challenge"
 
 
   - name: Include Nginx role

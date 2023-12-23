@@ -55,14 +55,20 @@ def browser():
 
 
 def test_website_response_code(browser):
+    """
+    Test if the website is reached and if title tag is maching with our actual website
+    """
     browser.get('https://dcoya:30000')
     assert browser.title == "Date and Machine Name"
-    assert browser.current_url == "https://dcoya:30000/"  # Adjust URL to your actual site
+    assert browser.current_url == "https://dcoya:30000/"
     assert browser.page_source
     assert browser.find_element('tag name', 'body')
 
 
 def test_machinename_and_datetime_exist(browser):
+    """
+    Test if datetime and machinename exist and if they are not empty
+    """
     browser.get('https://dcoya:30000')
     rendered_html = browser.page_source
     soup = BeautifulSoup(rendered_html, 'html.parser')
@@ -75,6 +81,9 @@ def test_machinename_and_datetime_exist(browser):
 
 
 def test_date_format(browser):
+    """
+    Test the format of the date and if it is matching the current date
+    """
     browser.get('https://dcoya:30000')
     rendered_html = browser.page_source
     soup = BeautifulSoup(rendered_html, 'html.parser')
@@ -86,6 +95,9 @@ def test_date_format(browser):
     assert date_element.strip() == f"{current_date}"
 
 def test_ssl_certificate():
+    """
+    Test the certificate associated to our nginx app. Check important field in relation with SSL
+    """
     hostname = 'dcoya'
     port = 30000
 

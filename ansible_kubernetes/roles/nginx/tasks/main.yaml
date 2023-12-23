@@ -1,4 +1,12 @@
+- name: Remove Taint in all master Node
+  become: yes
+  become_user: kubernetes
+  command: kubectl taint nodes --all node-role.kubernetes.io/master-
+  environment:
+    KUBECONFIG: /home/kubernetes/.kube/config
+
 - name: Create Nginx Deployment
+  become_user: kubernetes
   k8s:
     state: present
     definition:
@@ -19,12 +27,13 @@
           spec:
             containers:
               - name: nginx-container
-                image: nginx:latest
+                image: jcohenp/dcoya:latest
                 ports:
-                  - containerPort: 80
-    kubeconfig: /home/ubuntu/.kube/config
+                  - containerPort: 443
+    kubeconfig: /home/kubernetes/.kube/config
 
 - name: Expose Nginx Deployment
+  become_user: kubernetes
   k8s:
     state: present
     definition:
@@ -32,12 +41,14 @@
       kind: Service
       metadata:
         namespace: default
-        name: nginx-service
+        name: dcoya-nginx
       spec:
         selector:
           app: nginx
         ports:
           - protocol: TCP
-            port: 80
-            targetPort: 80
-    kubeconfig: /home/ubuntu/.kube/config
+            port: 443
+            targetPort: 443
+            nodePort: 30000
+        type: NodePort
+    kubeconfig: /home/kubernetes/.kube/config

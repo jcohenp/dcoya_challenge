@@ -1,7 +1,6 @@
 - name: Install Kubernetes
   hosts: kubernetes-nodes
   tasks:
-
   - name: Install pip3 on Debian-based systems
     become: true
     apt:
@@ -33,30 +32,61 @@
       state: present
       allow_downgrades: yes
 
+  - name: Create kubernetes user
+    user:
+      name: kubernetes
+      shell: /bin/bash
+      create_home: yes
+
+  - name: Add kubernetes to sudoers
+    lineinfile:
+      dest: /etc/sudoers
+      line: 'kubernetes ALL=(ALL) NOPASSWD:/usr/bin/kubectl, /usr/bin/kubeadm'
+      validate: 'visudo -cf %s'
+      insertafter: EOF
+      state: present
+
+
   - name: Initialize Kubernetes cluster
+    become_user: root
     become: true
     command: kubeadm init --pod-network-cidr=10.244.0.0/16
 
   - name: Ensure the .kube directory exists
     file:
-      path: /home/ubuntu/.kube
+      path: /home/kubernetes/.kube
       state: directory
       mode: '0755'
-      owner: ubuntu
+      owner: kubernetes
 
   - name: Copy kubeconfig to user's home directory
     become: true
     copy:
       src: /etc/kubernetes/admin.conf
-      dest: /home/ubuntu/.kube/config
+      dest: /home/kubernetes/.kube/config
       remote_src: yes
-      owner: ubuntu
+      owner: kubernetes
+      mode: '0660'
 
   - name: Install Calico CNI
     become: true
     command: kubectl apply -f https://docs.projectcalico.org/archive/v3.14/manifests/calico.yaml
     environment:
-      KUBECONFIG: /home/ubuntu/.kube/config
+      KUBECONFIG: /home/kubernetes/.kube/config
+
+  - name: Add execute permission to the script
+    become: yes
+    file:
+      path: chrome.sh
+      mode: u+x
+
+  - name: install chrome browser 
+    become: yes
+    command: "./chrome.sh"
+
+  - name: Move and change ownership of the folder
+    command: mv /home/ubuntu/dcoya_challenge/ansible_kubernetes /home/kubernetes && chown -R kubernetes: /home/kubernetes
+
 
   - name: Include Nginx role
     include_role:

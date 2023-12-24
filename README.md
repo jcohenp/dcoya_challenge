@@ -258,12 +258,6 @@ This repository contains various resources and configurations for managing a Kub
     pytest_dcoya.py::test_ssl_certificate PASSED         
     ```
     
-    ## POC 
-    a POC environment is available if you want to have a look on my own configuration and to run tests.
-    SSH access to the EC2 machine:
-    
-        ssh -i "dcoya.pem" ubuntu@ec2-100-26-40-113.compute-1.amazonaws.com
-    
     ## Project Enhancement Plan
     
     ### Domain and Certificate
